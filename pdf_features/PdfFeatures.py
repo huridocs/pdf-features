@@ -12,7 +12,7 @@ from lxml import etree
 from lxml.etree import ElementBase, XMLSyntaxError
 from pydantic import BaseModel
 
-from configuration import LABELS_FILE_NAME, TOKEN_TYPE_RELATIVE_PATH, XML_NAME
+from pdf_features.configuration import LABELS_FILE_NAME, TOKEN_TYPE_RELATIVE_PATH, XML_NAME
 from pdf_features.PdfFont import PdfFont
 from pdf_features.PdfModes import PdfModes
 from pdf_features.PdfPage import PdfPage

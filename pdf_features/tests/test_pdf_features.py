@@ -1,7 +1,7 @@
 from os.path import join
 from unittest import TestCase
 
-from configuration import ROOT_PATH
+from pdf_features.configuration import ROOT_PATH
 from pdf_features.PdfFeatures import PdfFeatures
 
 

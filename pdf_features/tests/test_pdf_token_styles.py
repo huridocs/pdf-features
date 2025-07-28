@@ -1,7 +1,7 @@
 from pathlib import Path
 from unittest import TestCase
 
-from configuration import ROOT_PATH
+from pdf_features.configuration import ROOT_PATH
 from pdf_features.PdfFeatures import PdfFeatures
 from pdf_features.ScriptType import ScriptType
 from pdf_features.TitleType import TitleType

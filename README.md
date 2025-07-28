@@ -7,7 +7,7 @@
 ## Features
 
 - **`pdf_features`**: Core PDF feature extraction and analysis
-- **`pdf_token_type_labels`**: Token type classification and labeled data handling
+- **`pdf_token_type_labels`**: Token type classification and labeled data handlingfrom_rectangle
 
 ### PDF Features Module
 - Extract text tokens and their bounding boxes from PDF documents
