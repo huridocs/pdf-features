@@ -1,0 +1,11 @@
+# Packaging
+dist/
+*.egg-info/
+build/
+
+# setuptools_scm version file
+pdf_features/_version.py
+
+__pycache__/
+.pytest_cache/
+.venv/
