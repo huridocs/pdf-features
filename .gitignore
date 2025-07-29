@@ -9,3 +9,4 @@ pdf_features/_version.py
 __pycache__/
 .pytest_cache/
 .venv/
+.idea/
