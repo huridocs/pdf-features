@@ -27,15 +27,23 @@
 
 > **System Requirements:**
 >
-> This project requires [Poppler](https://poppler.freedesktop.org/) to be installed on your system. Poppler provides the tools for PDF rendering and conversion. On Ubuntu/Debian, you can install it with:
+> This project requires [Poppler](https://poppler.freedesktop.org/) to be installed on your system. Poppler provides the tools for PDF rendering and conversion.
+>
+> **Poppler Installation Recommendation:**
+>
+> This project uses `pdftohtml`, which comes with Poppler. The recommended way to install Poppler is via your system's package manager. On Ubuntu/Debian, use:
 >
 > ```bash
 > sudo apt-get install poppler-utils
 > ```
+>
 > On macOS, use:
+>
 > ```bash
 > brew install poppler
 > ```
+>
+> **Version 24.02.0 of Poppler is known to work well with this project.** Installing Poppler from source or using other versions (especially newer ones) may cause issues with PDF processing. If you encounter problems, please ensure you are using Poppler 24.02.0 installed via your package manager.
 
 Install the Python package:
 
