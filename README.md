@@ -87,7 +87,10 @@ index = TokenType.TITLE.get_index()  # Returns 5
 You can use `PdfLabels`, `PageLabels`, and `Label` to assign and retrieve token types for specific bounding boxes on PDF pages. This is useful for managing labeled data or for downstream processing that requires token type information.
 
 ```python
-from pdf_token_type_labels import PdfLabels, PageLabels, Label, TokenType
+from pdf_token_type_labels.PdfLabels import PdfLabels
+from pdf_token_type_labels.PageLabels import PageLabels
+from pdf_token_type_labels.Label import Label
+from pdf_token_type_labels.TokenType import TokenType
 from pdf_features.Rectangle import Rectangle
 
 # Create a bounding box for a token (left, top, right, bottom)
