@@ -25,4 +25,6 @@ tag:
 	git push --tag
 
 test:
-	. .venv/bin/activate; command python -m pytest
+    devcontainer up --workspace-folder .
+    devcontainer exec --workspace-folder . pytest -v --tb=short --disable-warnings --maxfail=1
+    docker ps --filter "label=devcontainer.local_folder=$(pwd)" -q | xargs -r docker stop
