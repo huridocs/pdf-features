@@ -1,5 +1,4 @@
 from enum import IntEnum
-from pdf_token_type_labels.TokenType import TokenType
 
 LIST_INDICATORS = {"-", "•", "", "‣", "⁃", "⁌", "⁍", "◘", "◦", "⦾", "⦿"}
 

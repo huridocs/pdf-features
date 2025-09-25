@@ -27,7 +27,6 @@ class HyperlinkStyle(BaseModel):
 
         link_text = "".join(link_element.itertext()).strip()
         if link.startswith("http"):
-            # if link_text == content:
             if link_text and link_text in content:
                 return HyperlinkStyle(link_text=link_text, link=link, type=HyperlinkType.WEB_URL)
             else:
@@ -38,7 +37,7 @@ class HyperlinkStyle(BaseModel):
     def get_styled_content_markdown(self, content: str) -> str:
         if self.type != HyperlinkType.WEB_URL:
             return content
-        return f"{content.replace(self.link_text, f'[{self.link_text}]')}({self.link})"
+        return content.replace(self.link_text, f"[{self.link_text}]({self.link})")
 
     def get_styled_content_html(self, content: str) -> str:
         if self.type != HyperlinkType.WEB_URL:
