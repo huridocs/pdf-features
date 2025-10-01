@@ -47,9 +47,18 @@ class PdfFeatures(BaseModel):
             token.token_type = TokenType.from_index(labels.get_label_type(token.page_number, token.bounding_box))
 
     def set_common_text_height(self):
-        self.pdf_modes.common_text_height = mode(
-            [t.bounding_box.height for _, t in self.loop_tokens() if t.token_type in {TokenType.TEXT, TokenType.LIST_ITEM}]
-        )
+        text_heights = []
+        all_heights = []
+
+        for _, t in self.loop_tokens():
+            height = t.bounding_box.height
+            if t.token_type in {TokenType.TEXT, TokenType.LIST_ITEM}:
+                text_heights.append(height)
+            all_heights.append(height)
+
+        heights = text_heights if text_heights else all_heights
+        if heights:
+            self.pdf_modes.common_text_height = mode(heights)
 
     def set_token_styles(self):
         self.set_common_text_height()
