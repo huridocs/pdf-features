@@ -24,7 +24,7 @@ class TestPdfFeatures(TestCase):
 
     def test_from_poppler_etree_string(self):
         xml_path = join(ROOT_PATH, "test_pdfs", "cejil2.xml")
-        with open(xml_path, "r") as f:
+        with open(xml_path, "rb") as f:
             xml_content = f.read()
         pdf_features = PdfFeatures.from_poppler_etree_string(xml_content, "cejil2.xml", "test_dataset")
         self.assertIsNotNone(pdf_features)

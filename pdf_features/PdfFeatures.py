@@ -127,14 +127,12 @@ class PdfFeatures(BaseModel):
         )
 
     @staticmethod
-    def from_poppler_etree_string(xml_content: str, file_name: str = "", dataset: str = ""):
+    def from_poppler_etree_string(xml_content: bytes, file_name: str = "", dataset: str = ""):
         if not xml_content:
             return PdfFeatures.get_empty()
 
-        file_bytes: bytes = xml_content.encode("utf-8")
-
         parser = etree.XMLParser(recover=True, encoding="utf-8")
-        root: ElementBase = etree.fromstring(file_bytes, parser=parser)
+        root: ElementBase = etree.fromstring(xml_content, parser=parser)
 
         if root is None or not len(root):
             return PdfFeatures.get_empty()
