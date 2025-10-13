@@ -127,6 +127,33 @@ class PdfFeatures(BaseModel):
         )
 
     @staticmethod
+    def from_poppler_etree_string(xml_content: str, file_name: str = "", dataset: str = ""):
+        if not xml_content:
+            return PdfFeatures.get_empty()
+
+        file_bytes: bytes = xml_content.encode("utf-8")
+
+        parser = etree.XMLParser(recover=True, encoding="utf-8")
+        root: ElementBase = etree.fromstring(file_bytes, parser=parser)
+
+        if root is None or not len(root):
+            return PdfFeatures.get_empty()
+
+        fonts: list[PdfFont] = PdfFont.from_poppler_etree(root)
+        fonts_by_font_id: dict[str, PdfFont] = {font.font_id: font for font in fonts}
+        tree_pages: list[ElementBase] = [tree_page for tree_page in root.findall(".//page")]
+        pages: list[PdfPage] = [
+            PdfPage.from_poppler_etree(tree_page, fonts_by_font_id, file_name) for tree_page in tree_pages
+        ]
+
+        return PdfFeatures(
+            pages=pages,
+            fonts=fonts,
+            file_name=file_name,
+            file_type=dataset,
+        )
+
+    @staticmethod
     def contains_text(xml_path: str):
         try:
             file_content = open(xml_path).read()
