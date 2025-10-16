@@ -42,6 +42,14 @@ class Rectangle(BaseModel):
 
         return Rectangle.from_coordinates(x_min, y_min, x_max, y_max)
 
+    @staticmethod
+    def from_pdf_text_etree_element(element: ElementBase):
+        left = int(float(element.attrib["xMin"]))
+        top = int(float(element.attrib["yMin"]))
+        right = int(float(element.attrib["xMax"]))
+        bottom = int(float(element.attrib["yMax"]))
+        return Rectangle.from_coordinates(left, top, right, bottom)
+
     def get_intersection_percentage(self, rectangle: "Rectangle") -> float:
         x1 = max(self.left, rectangle.left)
         y1 = max(self.top, rectangle.top)
