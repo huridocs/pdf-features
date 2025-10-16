@@ -57,7 +57,7 @@ pip install git+https://github.com/huridocs/pdf-features.git
 
 ```python
 # Load PDF features from XML representation
-pdf_features = PdfFeatures.from_pdf_path("/path/to/pdf.pdf")
+pdf_features = PdfFeatures.get_pdf_words("/path/to/pdf.pdf")
 
 # Access pages and tokens
 for page in pdf_features.pages:

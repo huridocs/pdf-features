@@ -10,7 +10,7 @@ from pdf_features.HyperlinkStyle import HyperlinkType
 from pdf_token_type_labels.TokenType import TokenType
 
 
-class TestPdfTokesStyles(TestCase):
+class TestPdfTokenStyle(TestCase):
     def _get_pdf(self, filename):
         return PdfFeatures.from_pdf_path(Path(ROOT_PATH) / "test_pdfs" / filename)
 
