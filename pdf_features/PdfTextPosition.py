@@ -9,14 +9,16 @@ from pdf_features.PdfWord import PdfWord
 
 
 class PdfTextPosition:
-    def __init__(self, pdf_path: Path | str):
-        self.pdf_path: Path | str = pdf_path
-        self.pdf_words: list[PdfWord] = self.get_pdf_words(pdf_path)
+    def __init__(self, pdf_path: Path | str = None, pdf_words: list[PdfWord] = None):
+        if pdf_words:
+            self.pdf_words = pdf_words
+        else:
+            self.pdf_path: Path | str = pdf_path
+            self.pdf_words: list[PdfWord] = self.get_pdf_words()
 
-    @staticmethod
-    def get_pdf_words(pdf_path: str | Path) -> list[PdfWord]:
+    def get_pdf_words(self) -> list[PdfWord]:
         xml_path = Path(tempfile.gettempdir(), "pdf_text_positions.xml")
-        subprocess.run(["pdftotext", "-bbox-layout", pdf_path, xml_path])
+        subprocess.run(["pdftotext", "-bbox-layout", self.pdf_path, xml_path])
         file_content: str = open(xml_path, errors="ignore").read()
         file_bytes: bytes = file_content.encode("utf-8")
         parser = etree.XMLParser(recover=True, encoding="utf-8")
@@ -103,11 +105,12 @@ class PdfTextPosition:
                 best_match = candidate_words
 
         if best_score > 0.6:
-            return (best_match, best_score)
+            return best_match, best_score
 
         return None
 
-    def _calculate_match_score(self, candidate_text: str, search_words: list[str]) -> float:
+    @staticmethod
+    def _calculate_match_score(candidate_text: str, search_words: list[str]) -> float:
         search_text = " ".join(search_words)
 
         if candidate_text == search_text:
@@ -141,7 +144,8 @@ class PdfTextPosition:
 
         return score
 
-    def _merge_adjacent_words(self, words: list[PdfWord]) -> PdfWord:
+    @staticmethod
+    def _merge_adjacent_words(words: list[PdfWord]) -> PdfWord:
         if not words:
             raise ValueError("Cannot merge empty list of words")
 
