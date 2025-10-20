@@ -80,10 +80,50 @@ class PdfTextPosition:
 
         result = []
         for matched_words in unique_matches:
-            merged_word = self._merge_adjacent_words(matched_words)
-            result.append(merged_word)
+            lines = self._split_words_by_line(matched_words)
+            for line_words in lines:
+                merged_word = self._merge_adjacent_words(line_words)
+                result.append(merged_word)
 
         return result
+
+    @staticmethod
+    def _split_words_by_line(words: list[PdfWord]) -> list[list[PdfWord]]:
+        if not words:
+            return []
+
+        if len(words) == 1:
+            return [words]
+
+        lines = []
+        current_line = [words[0]]
+
+        for i in range(1, len(words)):
+            current_word = words[i]
+            previous_word = words[i - 1]
+
+            prev_top = previous_word.bounding_box.top
+            prev_bottom = previous_word.bounding_box.bottom
+            prev_height = previous_word.bounding_box.height
+
+            curr_top = current_word.bounding_box.top
+            curr_bottom = current_word.bounding_box.bottom
+
+            tolerance = prev_height * 0.3
+
+            top_diff = abs(curr_top - prev_top)
+            bottom_diff = abs(curr_bottom - prev_bottom)
+
+            if top_diff <= tolerance and bottom_diff <= tolerance:
+                current_line.append(current_word)
+            else:
+                lines.append(current_line)
+                current_line = [current_word]
+
+        if current_line:
+            lines.append(current_line)
+
+        return lines
 
     def _find_match_from_position(
         self, words: list[PdfWord], start_idx: int, search_words: list[str]
