@@ -9,7 +9,7 @@ from pdf_features.Rectangle import Rectangle
 class TestPdfTextPosition(TestCase):
     def setUp(self):
         pdf_path = join(ROOT_PATH, "test_pdfs", "cejil2.pdf")
-        self.pdf_text_position = PdfTextPosition(pdf_path)
+        self.pdf_text_position = PdfTextPosition.from_pdf_path(pdf_path)
 
     def test_get_pdf_words(self):
         self.assertIsNotNone(self.pdf_text_position.pdf_words)

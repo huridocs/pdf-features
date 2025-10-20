@@ -9,16 +9,18 @@ from pdf_features.PdfWord import PdfWord
 
 
 class PdfTextPosition:
-    def __init__(self, pdf_path: Path | str = None, pdf_words: list[PdfWord] = None):
-        if pdf_words:
-            self.pdf_words = pdf_words
-        else:
-            self.pdf_path: Path | str = pdf_path
-            self.pdf_words: list[PdfWord] = self.get_pdf_words()
+    def __init__(self, pdf_words: list[PdfWord]):
+        self.pdf_words = pdf_words
 
-    def get_pdf_words(self) -> list[PdfWord]:
+    @staticmethod
+    def from_pdf_path(pdf_path: Path | str) -> "PdfTextPosition":
+        pdf_words = PdfTextPosition.get_pdf_words(pdf_path)
+        return PdfTextPosition(pdf_words=pdf_words)
+
+    @staticmethod
+    def get_pdf_words(pdf_path: Path | str) -> list[PdfWord]:
         xml_path = Path(tempfile.gettempdir(), "pdf_text_positions.xml")
-        subprocess.run(["pdftotext", "-bbox-layout", self.pdf_path, xml_path])
+        subprocess.run(["pdftotext", "-bbox-layout", pdf_path, xml_path])
         file_content: str = open(xml_path, errors="ignore").read()
         file_bytes: bytes = file_content.encode("utf-8")
         parser = etree.XMLParser(recover=True, encoding="utf-8")
