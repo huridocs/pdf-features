@@ -10,15 +10,19 @@ def check_pdf_text_position():
     print(f"Loading PDF: {pdf_path}")
     pdf_text_position = PdfTextPosition.from_pdf_path(pdf_path)
 
-    search_text = "affirming the\ninadmissibility"
+    search_text_1 = "affirming the inadmissibility"
+    search_text_2 = "Recalling also Security Council resolutions 242 (1967) of 22 November 1967, 338 (1973) of 22 October 1973, 1397 (2002) of 12 March 2002 and 1402 (2002) of 30 March 2002,"
+    search_text_3 = "67/19 of 29"
     page_number = 1
-    search_bbox = Rectangle.from_coordinates(0, 0, 700, 700)
+    search_bbox = Rectangle.from_coordinates(0, 0, 700, 900)
 
-    print(f"Searching for text: {repr(search_text)}")
+    print(f"Searching for text: {repr(search_text_1)}")
     print(f"Page: {page_number}")
     print(f"Search bounding box: {search_bbox}")
 
-    results = pdf_text_position.get_bounding_boxes(search_text, search_bbox, page_number)
+    results = pdf_text_position.get_bounding_boxes(search_text_1, search_bbox, page_number)
+    results.extend(pdf_text_position.get_bounding_boxes(search_text_2, search_bbox, page_number))
+    results.extend(pdf_text_position.get_bounding_boxes(search_text_3, search_bbox, page_number))
 
     print(f"\nFound {len(results)} match(es):")
     for i, word in enumerate(results):
