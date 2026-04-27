@@ -1,4 +1,4 @@
 -r requirements.txt
-pytest==8.4.1
-ruff==0.12.5
-PyMuPDF
+pytest==9.0.3
+ruff==0.15.12
+PyMuPDF==1.27.2.3
