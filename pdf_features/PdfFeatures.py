@@ -116,7 +116,7 @@ class PdfFeatures(BaseModel):
             PdfPage.from_poppler_etree(tree_page, fonts_by_font_id, file_name) for tree_page in tree_pages
         ]
 
-        file_type: str = file_path.split("/")[-2] if not dataset else dataset
+        file_type: str = Path(file_path).parent.name if not dataset else dataset
         file_name: str = Path(file_path).name if not file_name else file_name
 
         return PdfFeatures(
