@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from os.path import join
 from unittest import TestCase
 
@@ -31,3 +32,18 @@ class TestPdfFeatures(TestCase):
         self.assertEqual(pdf_features.file_name, "cejil2.xml")
         self.assertEqual(pdf_features.file_type, "test_dataset")
         self.assertEqual(len(pdf_features.pages), 23)
+
+    def test_concurrent_calls_return_their_own_tokens(self):
+        def get_contents(pdf_path: str) -> list[str]:
+            pdf_features = PdfFeatures.from_pdf_path(pdf_path)
+            return [token.content for _, token in pdf_features.loop_tokens()]
+
+        pdf_paths = [join(ROOT_PATH, "test_pdfs", name) for name in ["cyrilla_13.pdf", "cyrilla_26.pdf", "resolution.pdf"]]
+        expected = {pdf_path: get_contents(pdf_path) for pdf_path in pdf_paths}
+        calls = pdf_paths * 8
+
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            results = list(executor.map(get_contents, calls))
+
+        for pdf_path, contents in zip(calls, results):
+            self.assertEqual(expected[pdf_path], contents)

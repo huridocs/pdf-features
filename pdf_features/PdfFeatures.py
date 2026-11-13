@@ -1,5 +1,4 @@
 import json
-import os
 import subprocess
 import tempfile
 from collections import Counter
@@ -172,8 +171,11 @@ class PdfFeatures(BaseModel):
 
     @staticmethod
     def from_pdf_path(pdf_path, xml_path: str | Path = None):
-        remove_xml = False if xml_path else True
-        xml_path = str(xml_path) if xml_path else join(tempfile.gettempdir(), "pdf_etree.xml")
+        if not xml_path:
+            with tempfile.TemporaryDirectory() as xml_directory:
+                return PdfFeatures.from_pdf_path(pdf_path, join(xml_directory, "pdf_etree.xml"))
+
+        xml_path = str(xml_path)
 
         if PdfFeatures.is_pdf_encrypted(pdf_path):
             subprocess.run(["qpdf", "--decrypt", "--replace-input", pdf_path])
@@ -191,12 +193,7 @@ class PdfFeatures(BaseModel):
                 stderr=subprocess.DEVNULL,
             )
 
-        pdf_features = PdfFeatures.from_poppler_etree(xml_path, file_name=Path(pdf_path).name)
-
-        if remove_xml and exists(xml_path):
-            os.remove(xml_path)
-
-        return pdf_features
+        return PdfFeatures.from_poppler_etree(xml_path, file_name=Path(pdf_path).name)
 
     @staticmethod
     def from_labeled_data(pdf_labeled_data_root_path: str | Path, dataset: str, pdf_name: str):
