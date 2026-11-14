@@ -19,9 +19,11 @@ class PdfTextPosition:
 
     @staticmethod
     def get_pdf_words(pdf_path: Path | str) -> list[PdfWord]:
-        xml_path = Path(tempfile.gettempdir(), "pdf_text_positions.xml")
-        subprocess.run(["pdftotext", "-bbox-layout", pdf_path, xml_path])
-        file_content: str = open(xml_path, errors="ignore").read()
+        with tempfile.TemporaryDirectory() as xml_directory:
+            xml_path = Path(xml_directory, "pdf_text_positions.xml")
+            subprocess.run(["pdftotext", "-bbox-layout", pdf_path, xml_path], check=True)
+            with open(xml_path, errors="ignore") as xml_file:
+                file_content: str = xml_file.read()
         file_bytes: bytes = file_content.encode("utf-8")
         parser = etree.XMLParser(recover=True, encoding="utf-8")
         root: ElementBase = etree.fromstring(file_bytes, parser=parser)
