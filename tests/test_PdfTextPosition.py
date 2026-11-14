@@ -1,4 +1,6 @@
+from concurrent.futures import ThreadPoolExecutor
 from os.path import join
+from subprocess import CalledProcessError
 from unittest import TestCase
 
 from pdf_features.configuration import ROOT_PATH
@@ -156,3 +158,20 @@ class TestPdfTextPosition(TestCase):
 
         self.assertGreater(len(results), 0)
         self.assertIn("José", results[0].text)
+
+    def test_unreadable_pdf_raises(self):
+        not_a_pdf_path = join(ROOT_PATH, "test_pdfs", "not_a_pdf.pdf")
+
+        with self.assertRaises(CalledProcessError):
+            PdfTextPosition.from_pdf_path(not_a_pdf_path)
+
+    def test_concurrent_calls_return_their_own_words(self):
+        pdf_paths = [join(ROOT_PATH, "test_pdfs", name) for name in ["cyrilla_13.pdf", "cyrilla_26.pdf", "resolution.pdf"]]
+        expected = {pdf_path: [word.text for word in PdfTextPosition.get_pdf_words(pdf_path)] for pdf_path in pdf_paths}
+        calls = pdf_paths * 8
+
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            results = list(executor.map(PdfTextPosition.get_pdf_words, calls))
+
+        for pdf_path, pdf_words in zip(calls, results):
+            self.assertEqual(expected[pdf_path], [word.text for word in pdf_words])
